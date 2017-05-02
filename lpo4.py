@@ -1,9 +1,13 @@
 import re
 import pymorphy2
 import gram
+import gtts
+import urllib.request as url
+import os.path as os
 
 string = "Лучше приходи всегда в один и тот же час,  - попросил Лис."
 string1 = "Сражение выигрывает тот, кто твердо решил его выиграть! "
+string2 = "Солнце ушло, однако на улице еще жарко, как в полдень"
 
 
 # Функция разбиения строки на слова
@@ -39,4 +43,24 @@ def morph_analysis(input):
             res += seps[i]
     return res
 
-print(morph_analysis(string))
+
+def is_connect():
+    try:
+        url.urlopen('https://www.google.com', timeout=5)
+        return True
+    except url.URLError:
+        pass
+    return False
+
+
+# Синтез речи
+def speach(input):
+    # Проверка подключения
+    if not is_connect():
+        return "Невозможно синтезировать речь: нет подключения к Интернету"
+    tts = gtts.gTTS(input, lang='ru')
+    tts.save('lpo4.wav')
+    return "Запись сохранена в файле lpo4.wav"
+
+print(speach(morph_analysis(string2)))
+print(morph_analysis(string2))
